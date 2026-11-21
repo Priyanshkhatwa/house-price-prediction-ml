@@ -76,9 +76,3 @@ House-Price-Prediction/
 
 ---
 
-## 👨‍💻 Author
-
-**Prabhash Verma**
-M.Tech Data Science Student
-
-(Upgraded to a full-stack premium application as requested)
