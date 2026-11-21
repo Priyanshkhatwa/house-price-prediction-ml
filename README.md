@@ -76,3 +76,9 @@ House-Price-Prediction/
 
 ---
 
+## 👨‍💻 Author
+
+**Parth Khatwa**
+M.Tech Data Science Student
+
+(Upgraded to a full-stack premium application as requested)
