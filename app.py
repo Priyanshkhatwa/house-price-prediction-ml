@@ -15,6 +15,10 @@ try:
 except Exception as e:
     print(f"Startup model check error: {e}")
 
+@app.route('/auth')
+def auth():
+    return render_template('auth.html', hide_sidebar=True)
+
 @app.route('/')
 def dashboard():
     stats = model.get_market_stats()

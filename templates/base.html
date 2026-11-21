@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -32,11 +33,13 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background-color: transparent;
         }
         /* Custom scrollbar */
         ::-webkit-scrollbar {
@@ -60,13 +63,48 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
-    </style>
-</head>
-<body class="text-slate-800 antialiased flex h-screen overflow-hidden">
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
+        /* View Transition Custom Animation */
+        ::view-transition-old(root) {
+            animation: none;
+            z-index: 1;
+        }
+        ::view-transition-new(root) {
+            animation: sweep-down 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            z-index: 2;
+        }
+        @keyframes sweep-down {
+            0% { clip-path: var(--wipe-start, inset(0 0 100% 0)); }
+            100% { clip-path: inset(0 0 0 0); }
+        }
+    </style>
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</head>
+<body class="text-slate-800 dark:text-slate-100 antialiased flex h-screen overflow-hidden bg-transparent transition-colors duration-500">
+
+    <!-- Cinematic Sky Background -->
+    <div id="sky-background" class="fixed inset-0 z-[-1] bg-sky-100 dark:bg-slate-950 transition-colors duration-1000 overflow-hidden">
+        <div id="sky-sunset" class="absolute inset-0 opacity-0 bg-gradient-to-b from-indigo-800 via-purple-600 to-orange-400"></div>
+        <div id="celestial-sun" class="absolute w-24 h-24 rounded-full bg-gradient-to-br from-amber-200 to-orange-400 shadow-[0_0_60px_rgba(251,146,60,0.8)]" style="top: 15%; left: 60%; transform: translateX(-50%);"></div>
+        <div id="celestial-moon" class="absolute w-20 h-20 rounded-full bg-gradient-to-br from-slate-100 to-slate-300 shadow-[0_0_40px_rgba(226,232,240,0.4)]" style="top: 120%; left: 60%; transform: translateX(-50%); opacity: 0;"></div>
+        <div id="stars-layer" class="absolute inset-0 opacity-0" style="background-image: radial-gradient(1px 1px at 10% 20%, white, transparent), radial-gradient(1px 1px at 30% 50%, white, transparent), radial-gradient(2px 2px at 70% 30%, white, transparent), radial-gradient(1.5px 1.5px at 80% 80%, white, transparent); background-size: 200px 200px; background-repeat: repeat;"></div>
+    </div>
+    <div id="light-sweep" class="fixed top-0 left-0 w-full h-1 bg-white shadow-[0_0_30px_10px_rgba(255,255,255,0.8),0_0_50px_15px_rgba(20,184,166,0.6)] transform -translate-y-10 opacity-0 z-[9999] pointer-events-none"></div>
+
+    {% if hide_sidebar %}
+        {% block auth_content %}{% endblock %}
+    {% else %}
     <!-- Sidebar -->
-    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col hidden md:flex flex-shrink-0 transition-all duration-300">
-        <div class="h-16 flex items-center px-6 border-b border-slate-800">
+    <aside class="w-64 bg-slate-900 dark:bg-slate-950 text-slate-300 flex flex-col hidden md:flex flex-shrink-0 transition-all duration-300 border-r dark:border-slate-800">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800 dark:border-slate-800/50">
             <i class="ph-fill ph-buildings text-brand-500 text-2xl mr-2"></i>
             <span class="text-white text-xl font-bold tracking-tight">EstiMate</span>
         </div>
@@ -105,15 +143,16 @@
             </nav>
         </div>
 
-        <div class="p-4 border-t border-slate-800">
-            <div class="flex items-center">
-                <div class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center text-white font-bold">
-                    P
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-white">Parth Khatwa</p>
-                    <p class="text-xs text-slate-400">Pro Member</p>
-                </div>
+        <div class="p-4 border-t border-slate-800 flex flex-col space-y-4">
+            <div id="sidebar-profile" class="w-full">
+                <!-- JS will inject profile or login button here -->
+            </div>
+            <div class="flex items-center justify-between w-full pt-2 border-t border-slate-700/50">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Appearance</span>
+                <button class="theme-toggle relative text-slate-400 hover:text-brand-400 transition-colors w-9 h-9 flex items-center justify-center rounded-full bg-slate-800 dark:bg-slate-950 border border-slate-700 dark:border-slate-800">
+                    <i class="ph-fill ph-sun text-lg text-amber-500 absolute transition-all duration-500 transform scale-100 opacity-100 dark:scale-0 dark:opacity-0"></i>
+                    <i class="ph-fill ph-moon text-lg text-blue-400 absolute transition-all duration-500 transform scale-0 opacity-0 dark:scale-100 dark:opacity-100"></i>
+                </button>
             </div>
         </div>
     </aside>
@@ -122,28 +161,32 @@
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
 
         <!-- Mobile Header -->
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:hidden z-10">
+        <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 md:hidden z-10 transition-colors duration-500">
             <div class="flex items-center">
                 <i class="ph-fill ph-buildings text-brand-500 text-2xl mr-2"></i>
-                <span class="text-slate-900 text-xl font-bold">EstiMate</span>
+                <span class="text-slate-900 dark:text-white text-xl font-bold">EstiMate</span>
             </div>
-            <button id="mobile-menu-btn" class="text-slate-500 hover:text-slate-900">
+            <button id="mobile-menu-btn" class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                 <i class="ph ph-list text-2xl"></i>
             </button>
         </header>
 
         <!-- Desktop Header / Topbar -->
-        <header class="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200 hidden md:flex items-center justify-between px-8 z-10">
+        <header class="h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 hidden md:flex items-center justify-between px-8 z-10 transition-colors duration-500">
             <div>
-                <h1 class="text-xl font-semibold text-slate-800">
+                <h1 class="text-xl font-semibold text-slate-800 dark:text-slate-100">
                     {% block page_title %}Dashboard{% endblock %}
                 </h1>
             </div>
             <div class="flex items-center space-x-4">
-                <button class="text-slate-400 hover:text-brand-500 transition-colors">
+                <button class="theme-toggle relative text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 transition-colors w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+                    <i class="ph-fill ph-sun text-xl text-amber-500 absolute transition-all duration-500 transform scale-100 opacity-100 dark:scale-0 dark:opacity-0"></i>
+                    <i class="ph-fill ph-moon text-xl text-blue-400 absolute transition-all duration-500 transform scale-0 opacity-0 dark:scale-100 dark:opacity-100"></i>
+                </button>
+                <button class="text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 transition-colors">
                     <i class="ph ph-bell text-xl"></i>
                 </button>
-                <button class="text-slate-400 hover:text-brand-500 transition-colors">
+                <button class="text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 transition-colors">
                     <i class="ph ph-gear text-xl"></i>
                 </button>
                 <a href="{{ url_for('predict') }}" class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm shadow-brand-500/20">
@@ -153,16 +196,16 @@
         </header>
 
         <!-- Main scrollable area -->
-        <main class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50">
+        <main class="flex-1 overflow-y-auto p-4 md:p-8 bg-transparent transition-colors duration-500 relative">
 
             <!-- Flash Messages -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
                         <div class="mb-6 p-4 rounded-lg flex items-start
-                            {% if category == 'error' %}bg-red-50 text-red-800 border border-red-200
-                            {% elif category == 'success' %}bg-green-50 text-green-800 border border-green-200
-                            {% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+                            {% if category == 'error' %}bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-800/50
+                            {% elif category == 'success' %}bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800/50
+                            {% else %}bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800/50{% endif %}">
 
                             {% if category == 'error' %}
                                 <i class="ph-fill ph-warning-circle text-xl mr-3 text-red-500 mt-0.5"></i>
@@ -183,30 +226,43 @@
             {% block content %}{% endblock %}
 
             <!-- Footer -->
-            <footer class="mt-12 pt-6 border-t border-slate-200 text-center text-sm text-slate-500 pb-4">
+            <footer class="mt-12 pt-6 border-t border-slate-200 dark:border-slate-800 text-center text-sm text-slate-500 dark:text-slate-400 pb-4 transition-colors duration-500">
                 &copy; 2023 EstiMate Analytics. All rights reserved.
             </footer>
         </main>
     </div>
+    {% endif %}
 
     <!-- Mobile Menu Overlay (hidden by default) -->
     <div id="mobile-menu" class="fixed inset-0 bg-slate-900/80 z-50 hidden opacity-0 transition-opacity">
-        <div class="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-xl flex flex-col transform translate-x-full transition-transform" id="mobile-menu-panel">
-            <div class="p-4 flex justify-between items-center border-b border-slate-100">
-                <span class="font-bold text-lg">Menu</span>
-                <button id="close-menu-btn" class="text-slate-500 hover:text-slate-900 p-2">
+        <div class="fixed inset-y-0 right-0 max-w-xs w-full bg-white dark:bg-slate-900 shadow-xl flex flex-col transform translate-x-full transition-transform" id="mobile-menu-panel">
+            <div class="p-4 flex justify-between items-center border-b border-slate-100 dark:border-slate-800">
+                <span class="font-bold text-lg dark:text-white">Menu</span>
+                <button id="close-menu-btn" class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white p-2">
                     <i class="ph ph-x text-xl"></i>
                 </button>
             </div>
             <!-- Mobile nav links... mirroring sidebar -->
-            <nav class="p-4 space-y-2">
-                <a href="{{ url_for('dashboard') }}" class="flex items-center p-3 rounded-lg bg-slate-50 text-slate-900 font-medium">Dashboard</a>
-                <a href="{{ url_for('predict') }}" class="flex items-center p-3 rounded-lg text-slate-600 hover:bg-slate-50">New Prediction</a>
-                <a href="{{ url_for('history') }}" class="flex items-center p-3 rounded-lg text-slate-600 hover:bg-slate-50">History</a>
-                <a href="{{ url_for('favorites') }}" class="flex items-center p-3 rounded-lg text-slate-600 hover:bg-slate-50">Saved Properties</a>
-                <a href="{{ url_for('comparison') }}" class="flex items-center p-3 rounded-lg text-slate-600 hover:bg-slate-50">Compare</a>
-                <a href="{{ url_for('insights') }}" class="flex items-center p-3 rounded-lg text-slate-600 hover:bg-slate-50">Market Insights</a>
+            <nav class="p-4 space-y-2 flex-1">
+                <a href="{{ url_for('dashboard') }}" class="flex items-center p-3 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-medium">Dashboard</a>
+                <a href="{{ url_for('predict') }}" class="flex items-center p-3 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800">New Prediction</a>
+                <a href="{{ url_for('history') }}" class="flex items-center p-3 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800">History</a>
+                <a href="{{ url_for('favorites') }}" class="flex items-center p-3 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800">Saved Properties</a>
+                <a href="{{ url_for('comparison') }}" class="flex items-center p-3 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800">Compare</a>
+                <a href="{{ url_for('insights') }}" class="flex items-center p-3 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800">Market Insights</a>
             </nav>
+            <div class="p-4 border-t border-slate-100 dark:border-slate-800 flex flex-col space-y-4">
+                <div id="mobile-profile" class="w-full">
+                    <!-- JS will inject profile or login button here -->
+                </div>
+                <div class="flex items-center justify-between w-full pt-2 border-t border-slate-100 dark:border-slate-700/50">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Appearance</span>
+                    <button class="theme-toggle relative text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 transition-colors w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+                        <i class="ph-fill ph-sun text-xl text-amber-500 absolute transition-all duration-500 transform scale-100 opacity-100 dark:scale-0 dark:opacity-0"></i>
+                        <i class="ph-fill ph-moon text-xl text-blue-400 absolute transition-all duration-500 transform scale-0 opacity-0 dark:scale-100 dark:opacity-100"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -237,6 +293,163 @@
                 }, 300);
             });
         }
+
+        // Theme Toggle Logic with Cinematic Animation
+        const themeToggleBtns = document.querySelectorAll('.theme-toggle');
+        const root = document.documentElement;
+
+        // Setup initial theme based on localStorage
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            root.classList.add('dark');
+        } else {
+            root.classList.remove('dark');
+        }
+
+        themeToggleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const isDark = root.classList.contains('dark');
+
+                // Check for reduced motion preference
+                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                if (prefersReducedMotion) {
+                    toggleThemeClass(!isDark);
+                    return;
+                }
+
+                playCinematicTransition(!isDark);
+            });
+        });
+
+        function toggleThemeClass(isDark) {
+            if (isDark) {
+                root.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                root.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        let isAnimating = false;
+
+        function playCinematicTransition(toDark) {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const sky = document.getElementById('sky-sunset');
+            const sun = document.getElementById('celestial-sun');
+            const moon = document.getElementById('celestial-moon');
+            const stars = document.getElementById('stars-layer');
+            const sweep = document.getElementById('light-sweep');
+
+            const tl = gsap.timeline({
+                onComplete: () => { isAnimating = false; }
+            });
+
+            if (toDark) {
+                // Prepare Day scene in background
+                gsap.set(sun, { top: '15%', scale: 1, opacity: 1 });
+                gsap.set(moon, { top: '120%', scale: 0.5, opacity: 0 });
+                gsap.set(stars, { opacity: 0 });
+                gsap.set(sky, { opacity: 0, background: 'linear-gradient(to bottom, #1e3a8a, #f97316)' });
+                gsap.set(sweep, { top: '-20px', opacity: 0 });
+
+                // 1. Sun sets & sunset colors appear
+                tl.to(sun, { top: '80%', scale: 1.2, opacity: 0, duration: 2, ease: "power2.inOut" }, 0)
+                  .to(sky, { opacity: 1, duration: 1 }, 0)
+                  // 2. Stars appear & moon rises
+                  .to(stars, { opacity: 1, duration: 1.5 }, 1)
+                  .to(moon, { top: '15%', scale: 1, opacity: 1, duration: 2, ease: "power2.out" }, 1)
+                  // 3. Sweep down & class toggle
+                  .to(sweep, { opacity: 1, duration: 0.1 }, 2)
+                  .to(sweep, { top: '100%', duration: 1.5, ease: "power2.inOut" }, 2)
+                  .call(() => {
+                      toggleThemeClass(true);
+                  }, null, 2.5)
+                  // 4. Fade out sunset overlay
+                  .to(sky, { opacity: 0, duration: 1 }, 3)
+                  .to(sweep, { opacity: 0, duration: 0.2 }, 3.5);
+
+            } else {
+                // Prepare Night scene in background
+                gsap.set(sun, { top: '120%', scale: 0.5, opacity: 0 });
+                gsap.set(moon, { top: '15%', scale: 1, opacity: 1 });
+                gsap.set(stars, { opacity: 1 });
+                gsap.set(sky, { opacity: 0, background: 'linear-gradient(to bottom, #87CEEB, #f0fdfa)' });
+                gsap.set(sweep, { top: '100%', opacity: 0 });
+
+                // 1. Moon sets & morning colors appear
+                tl.to(moon, { top: '80%', scale: 1.2, opacity: 0, duration: 2, ease: "power2.inOut" }, 0)
+                  .to(sky, { opacity: 1, duration: 1 }, 0)
+                  .to(stars, { opacity: 0, duration: 1 }, 0)
+                  // 2. Sun rises
+                  .to(sun, { top: '15%', scale: 1, opacity: 1, duration: 2, ease: "power2.out" }, 1)
+                  // 3. Sweep up & class toggle
+                  .to(sweep, { opacity: 1, duration: 0.1 }, 2)
+                  .to(sweep, { top: '-20px', duration: 1.5, ease: "power2.inOut" }, 2)
+                  .call(() => {
+                      toggleThemeClass(false);
+                  }, null, 2.5)
+                  // 4. Fade out morning overlay
+                  .to(sky, { opacity: 0, duration: 1 }, 3)
+                  .to(sweep, { opacity: 0, duration: 0.2 }, 3.5);
+            }
+        }
+        function updateProfileUI() {
+            const sidebarProfile = document.getElementById('sidebar-profile');
+            const mobileProfile = document.getElementById('mobile-profile');
+
+            const userStr = localStorage.getItem('currentUser');
+            let profileHTML = '';
+
+            if (userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    profileHTML = `
+                        <div class="flex items-center justify-between w-full">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                    ${user.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-bold text-inherit">${user.name}</p>
+                                    <p class="text-xs text-slate-400 truncate w-32">${user.email}</p>
+                                </div>
+                            </div>
+                            <button onclick="logoutUser()" class="text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors p-2" title="Log out">
+                                <i class="ph-bold ph-sign-out text-xl"></i>
+                            </button>
+                        </div>
+                    `;
+                } catch (e) {
+                    profileHTML = getGuestProfileHTML();
+                }
+            } else {
+                profileHTML = getGuestProfileHTML();
+            }
+
+            if (sidebarProfile) sidebarProfile.innerHTML = profileHTML;
+            if (mobileProfile) mobileProfile.innerHTML = profileHTML;
+        }
+
+        function getGuestProfileHTML() {
+            return `
+                <div class="flex flex-col items-center justify-center text-center w-full py-1">
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Save your valuations</p>
+                    <a href="/auth" class="w-full py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg text-sm font-medium transition-colors shadow-sm inline-block">
+                        Log In / Sign Up
+                    </a>
+                </div>
+            `;
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('currentUser');
+            window.location.href = '/auth';
+        }
+
+        document.addEventListener('DOMContentLoaded', updateProfileUI);
     </script>
 
     {% block scripts %}{% endblock %}

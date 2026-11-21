@@ -5,17 +5,17 @@
 {% block content %}
 <div class="mb-6 flex justify-between items-end">
     <div>
-        <div class="flex items-center text-sm text-slate-500 mb-2">
-            <a href="{{ url_for('dashboard') }}" class="hover:text-brand-500">Dashboard</a>
+        <div class="flex items-center text-sm text-slate-500 dark:text-slate-400 mb-2 transition-colors">
+            <a href="{{ url_for('dashboard') }}" class="hover:text-brand-500 transition-colors">Dashboard</a>
             <i class="ph-bold ph-caret-right mx-2 text-xs"></i>
-            <span class="text-slate-800 font-medium">Valuation Report</span>
+            <span class="text-slate-800 dark:text-slate-200 font-medium transition-colors">Valuation Report</span>
         </div>
-        <h2 class="text-2xl font-bold text-slate-800 tracking-tight">AI Property Valuation</h2>
+        <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight transition-colors duration-500">AI Property Valuation</h2>
     </div>
 
     <div class="flex space-x-3">
         <form action="{{ url_for('add_favorite', record_id=record.id) }}" method="POST">
-            <button type="submit" class="bg-white border border-slate-200 text-slate-700 hover:text-red-500 hover:border-red-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center">
+            <button type="submit" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-red-500 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-900/50 px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center">
                 <i class="ph-bold ph-heart mr-2"></i> Save
             </button>
         </form>
@@ -29,8 +29,8 @@
 
     <!-- Price Card -->
     <div class="lg:col-span-1 space-y-6">
-        <div class="bg-slate-900 rounded-2xl p-8 shadow-lg text-center relative overflow-hidden">
-            <div class="absolute -right-8 -top-8 text-slate-800 opacity-50 z-0">
+        <div class="bg-slate-900 dark:bg-slate-950 rounded-2xl p-8 shadow-lg text-center relative overflow-hidden transition-colors duration-500 border border-transparent dark:border-slate-800">
+            <div class="absolute -right-8 -top-8 text-slate-800 dark:text-slate-800/50 opacity-50 z-0 transition-colors duration-500">
                 <i class="ph-fill ph-check-circle text-9xl"></i>
             </div>
 
@@ -56,50 +56,50 @@
         </div>
 
         <!-- Summary details -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-            <h3 class="text-lg font-bold text-slate-800 mb-4 border-b border-slate-100 pb-3">Property Summary</h3>
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 transition-colors duration-500">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 border-b border-slate-100 dark:border-slate-700 pb-3 transition-colors duration-500">Property Summary</h3>
             <ul class="space-y-4">
                 <li class="flex justify-between items-center">
-                    <div class="flex items-center text-slate-600">
-                        <i class="ph-duotone ph-frame-corners text-xl mr-3 text-slate-400"></i>
+                    <div class="flex items-center text-slate-600 dark:text-slate-400 transition-colors">
+                        <i class="ph-duotone ph-frame-corners text-xl mr-3 text-slate-400 dark:text-slate-500"></i>
                         <span>Living Area</span>
                     </div>
-                    <span class="font-bold text-slate-800">{{ "{:,}".format(record.gr_liv_area) }} sqft</span>
+                    <span class="font-bold text-slate-800 dark:text-slate-100">{{ "{:,}".format(record.gr_liv_area) }} sqft</span>
                 </li>
                 <li class="flex justify-between items-center">
-                    <div class="flex items-center text-slate-600">
-                        <i class="ph-duotone ph-bathtub text-xl mr-3 text-slate-400"></i>
+                    <div class="flex items-center text-slate-600 dark:text-slate-400 transition-colors">
+                        <i class="ph-duotone ph-bathtub text-xl mr-3 text-slate-400 dark:text-slate-500"></i>
                         <span>Full Baths</span>
                     </div>
-                    <span class="font-bold text-slate-800">{{ record.full_bath }}</span>
+                    <span class="font-bold text-slate-800 dark:text-slate-100">{{ record.full_bath }}</span>
                 </li>
                 <li class="flex justify-between items-center">
-                    <div class="flex items-center text-slate-600">
-                        <i class="ph-duotone ph-calendar-blank text-xl mr-3 text-slate-400"></i>
+                    <div class="flex items-center text-slate-600 dark:text-slate-400 transition-colors">
+                        <i class="ph-duotone ph-calendar-blank text-xl mr-3 text-slate-400 dark:text-slate-500"></i>
                         <span>Year Built</span>
                     </div>
-                    <span class="font-bold text-slate-800">{{ record.year_built }}</span>
+                    <span class="font-bold text-slate-800 dark:text-slate-100">{{ record.year_built }}</span>
                 </li>
                 <li class="flex justify-between items-center">
-                    <div class="flex items-center text-slate-600">
-                        <i class="ph-duotone ph-car-profile text-xl mr-3 text-slate-400"></i>
+                    <div class="flex items-center text-slate-600 dark:text-slate-400 transition-colors">
+                        <i class="ph-duotone ph-car-profile text-xl mr-3 text-slate-400 dark:text-slate-500"></i>
                         <span>Garage Size</span>
                     </div>
-                    <span class="font-bold text-slate-800">{{ record.garage_cars }} Cars ({{ record.garage_area }} sqft)</span>
+                    <span class="font-bold text-slate-800 dark:text-slate-100">{{ record.garage_cars }} Cars ({{ record.garage_area }} sqft)</span>
                 </li>
                 <li class="flex justify-between items-center">
-                    <div class="flex items-center text-slate-600">
-                        <i class="ph-duotone ph-stairs text-xl mr-3 text-slate-400"></i>
+                    <div class="flex items-center text-slate-600 dark:text-slate-400 transition-colors">
+                        <i class="ph-duotone ph-stairs text-xl mr-3 text-slate-400 dark:text-slate-500"></i>
                         <span>Basement</span>
                     </div>
-                    <span class="font-bold text-slate-800">{{ "{:,}".format(record.total_bsmt_sf) }} sqft</span>
+                    <span class="font-bold text-slate-800 dark:text-slate-100">{{ "{:,}".format(record.total_bsmt_sf) }} sqft</span>
                 </li>
                 <li class="flex justify-between items-center">
-                    <div class="flex items-center text-slate-600">
-                        <i class="ph-duotone ph-star text-xl mr-3 text-slate-400"></i>
+                    <div class="flex items-center text-slate-600 dark:text-slate-400 transition-colors">
+                        <i class="ph-duotone ph-star text-xl mr-3 text-slate-400 dark:text-slate-500"></i>
                         <span>Overall Quality</span>
                     </div>
-                    <span class="font-bold text-slate-800">{{ record.overall_qual }} / 10</span>
+                    <span class="font-bold text-slate-800 dark:text-slate-100">{{ record.overall_qual }} / 10</span>
                 </li>
             </ul>
         </div>
@@ -109,51 +109,51 @@
     <div class="lg:col-span-2 space-y-8">
 
         <!-- Value Breakdown -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-            <h3 class="text-lg font-bold text-slate-800 mb-6">Price Contribution Breakdown</h3>
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 transition-colors duration-500">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 transition-colors">Price Contribution Breakdown</h3>
 
             <div class="space-y-5">
                 <!-- Factor 1 -->
                 <div>
-                    <div class="flex justify-between text-sm mb-1">
-                        <span class="font-medium text-slate-700">Size & Area</span>
-                        <span class="font-bold text-slate-800">High Impact</span>
+                    <div class="flex justify-between text-sm mb-1 transition-colors">
+                        <span class="font-medium text-slate-700 dark:text-slate-300">Size & Area</span>
+                        <span class="font-bold text-slate-800 dark:text-slate-100">High Impact</span>
                     </div>
-                    <div class="w-full bg-slate-100 rounded-full h-2.5">
+                    <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 transition-colors">
                         <div class="bg-brand-500 h-2.5 rounded-full" style="width: 85%"></div>
                     </div>
-                    <p class="text-xs text-slate-500 mt-1">Living area of {{ record.gr_liv_area }} sqft is the primary price driver.</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 transition-colors">Living area of {{ record.gr_liv_area }} sqft is the primary price driver.</p>
                 </div>
 
                 <!-- Factor 2 -->
                 <div>
-                    <div class="flex justify-between text-sm mb-1">
-                        <span class="font-medium text-slate-700">Quality & Finish ({{ record.overall_qual }}/10)</span>
-                        <span class="font-bold text-slate-800">High Impact</span>
+                    <div class="flex justify-between text-sm mb-1 transition-colors">
+                        <span class="font-medium text-slate-700 dark:text-slate-300">Quality & Finish ({{ record.overall_qual }}/10)</span>
+                        <span class="font-bold text-slate-800 dark:text-slate-100">High Impact</span>
                     </div>
-                    <div class="w-full bg-slate-100 rounded-full h-2.5">
+                    <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 transition-colors">
                         <div class="bg-blue-500 h-2.5 rounded-full" style="width: 70%"></div>
                     </div>
                 </div>
 
                 <!-- Factor 3 -->
                 <div>
-                    <div class="flex justify-between text-sm mb-1">
-                        <span class="font-medium text-slate-700">Age & Condition (Built {{ record.year_built }})</span>
-                        <span class="font-bold text-slate-800">Medium Impact</span>
+                    <div class="flex justify-between text-sm mb-1 transition-colors">
+                        <span class="font-medium text-slate-700 dark:text-slate-300">Age & Condition (Built {{ record.year_built }})</span>
+                        <span class="font-bold text-slate-800 dark:text-slate-100">Medium Impact</span>
                     </div>
-                    <div class="w-full bg-slate-100 rounded-full h-2.5">
+                    <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 transition-colors">
                         <div class="bg-indigo-500 h-2.5 rounded-full" style="width: 45%"></div>
                     </div>
                 </div>
 
                 <!-- Factor 4 -->
                 <div>
-                    <div class="flex justify-between text-sm mb-1">
-                        <span class="font-medium text-slate-700">Amenities (Garage, Basement)</span>
-                        <span class="font-bold text-slate-800">Medium Impact</span>
+                    <div class="flex justify-between text-sm mb-1 transition-colors">
+                        <span class="font-medium text-slate-700 dark:text-slate-300">Amenities (Garage, Basement)</span>
+                        <span class="font-bold text-slate-800 dark:text-slate-100">Medium Impact</span>
                     </div>
-                    <div class="w-full bg-slate-100 rounded-full h-2.5">
+                    <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 transition-colors">
                         <div class="bg-violet-500 h-2.5 rounded-full" style="width: 35%"></div>
                     </div>
                 </div>
@@ -161,28 +161,28 @@
         </div>
 
         <!-- Comparable insights -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-            <h3 class="text-lg font-bold text-slate-800 mb-6">Market Comparison</h3>
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 transition-colors duration-500">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 transition-colors">Market Comparison</h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="p-5 border border-slate-100 rounded-xl bg-slate-50">
-                    <h4 class="text-sm font-bold text-slate-700 mb-3">Similar Properties</h4>
-                    <p class="text-3xl font-bold text-slate-900 mb-1">$215k <span class="text-lg text-slate-400 font-normal">avg</span></p>
-                    <p class="text-xs text-slate-500">Properties with similar size and quality in the area.</p>
+                <div class="p-5 border border-slate-100 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900 transition-colors duration-500">
+                    <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 transition-colors">Similar Properties</h4>
+                    <p class="text-3xl font-bold text-slate-900 dark:text-white mb-1 transition-colors">$215k <span class="text-lg text-slate-400 font-normal">avg</span></p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 transition-colors">Properties with similar size and quality in the area.</p>
                 </div>
 
-                <div class="p-5 border border-slate-100 rounded-xl bg-slate-50">
-                    <h4 class="text-sm font-bold text-slate-700 mb-3">Your Property vs Average</h4>
+                <div class="p-5 border border-slate-100 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900 transition-colors duration-500">
+                    <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 transition-colors">Your Property vs Average</h4>
                     <div class="flex items-end">
                         <div class="w-1/2 flex flex-col items-center">
-                            <div class="w-12 bg-slate-300 rounded-t-md h-24"></div>
-                            <span class="text-xs font-medium text-slate-500 mt-2">Average</span>
+                            <div class="w-12 bg-slate-300 dark:bg-slate-600 rounded-t-md h-24 transition-colors"></div>
+                            <span class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-2 transition-colors">Average</span>
                         </div>
                         <div class="w-1/2 flex flex-col items-center">
                             <div class="w-12 bg-brand-500 rounded-t-md h-32 relative">
-                                <div class="absolute -top-6 w-full text-center text-xs font-bold text-brand-600">+18%</div>
+                                <div class="absolute -top-6 w-full text-center text-xs font-bold text-brand-600 dark:text-brand-400 transition-colors">+18%</div>
                             </div>
-                            <span class="text-xs font-bold text-slate-800 mt-2">Yours</span>
+                            <span class="text-xs font-bold text-slate-800 dark:text-slate-100 mt-2 transition-colors">Yours</span>
                         </div>
                     </div>
                 </div>

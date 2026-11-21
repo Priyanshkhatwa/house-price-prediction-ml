@@ -5,44 +5,44 @@
 {% block content %}
 <div class="mb-6 flex justify-between items-end">
     <div>
-        <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Compare Properties</h2>
-        <p class="text-slate-500 mt-1">Select up to 3 properties to compare side-by-side.</p>
+        <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight transition-colors">Compare Properties</h2>
+        <p class="text-slate-500 dark:text-slate-400 mt-1 transition-colors">Select up to 3 properties to compare side-by-side.</p>
     </div>
 </div>
 
 {% if records|length >= 2 %}
-<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 overflow-x-auto">
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 overflow-x-auto transition-colors duration-500">
     <table class="w-full text-left">
         <thead>
             <tr>
-                <th class="w-1/4 p-4 border-b border-slate-200">
-                    <div class="font-bold text-slate-800">Feature</div>
+                <th class="w-1/4 p-4 border-b border-slate-200 dark:border-slate-700 transition-colors">
+                    <div class="font-bold text-slate-800 dark:text-slate-100 transition-colors">Feature</div>
                 </th>
                 {% for record in records[:3] %}
-                <th class="w-1/4 p-4 border-b border-slate-200 bg-slate-50 rounded-t-lg">
-                    <div class="text-xs text-slate-500 font-normal mb-1">{{ record.timestamp.split()[0] }}</div>
-                    <div class="font-bold text-brand-600 text-xl">${{ "{:,.0f}".format(record.predicted_price) }}</div>
+                <th class="w-1/4 p-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 rounded-t-lg transition-colors">
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-normal mb-1 transition-colors">{{ record.timestamp.split()[0] }}</div>
+                    <div class="font-bold text-brand-600 dark:text-brand-400 text-xl transition-colors">${{ "{:,.0f}".format(record.predicted_price) }}</div>
                 </th>
                 {% endfor %}
             </tr>
         </thead>
-        <tbody class="divide-y divide-slate-100 text-sm">
+        <tbody class="divide-y divide-slate-100 dark:divide-slate-700 text-sm transition-colors">
             <tr>
-                <td class="p-4 font-medium text-slate-700">Price / SqFt</td>
+                <td class="p-4 font-medium text-slate-700 dark:text-slate-200 transition-colors">Price / SqFt</td>
                 {% for record in records[:3] %}
-                <td class="p-4 text-slate-800 bg-slate-50/50">${{ "{:,.0f}".format(record.predicted_price / record.gr_liv_area) }}</td>
+                <td class="p-4 text-slate-800 dark:text-slate-100 bg-slate-50/50 dark:bg-slate-900/30 transition-colors">${{ "{:,.0f}".format(record.predicted_price / record.gr_liv_area) }}</td>
                 {% endfor %}
             </tr>
             <tr>
-                <td class="p-4 font-medium text-slate-700">Living Area</td>
+                <td class="p-4 font-medium text-slate-700 dark:text-slate-200 transition-colors">Living Area</td>
                 {% for record in records[:3] %}
-                <td class="p-4 text-slate-800 bg-slate-50/50">{{ "{:,}".format(record.gr_liv_area) }} sqft</td>
+                <td class="p-4 text-slate-800 dark:text-slate-100 bg-slate-50/50 dark:bg-slate-900/30 transition-colors">{{ "{:,}".format(record.gr_liv_area) }} sqft</td>
                 {% endfor %}
             </tr>
             <tr>
-                <td class="p-4 font-medium text-slate-700">Quality Score</td>
+                <td class="p-4 font-medium text-slate-700 dark:text-slate-200 transition-colors">Quality Score</td>
                 {% for record in records[:3] %}
-                <td class="p-4 text-slate-800 bg-slate-50/50">
+                <td class="p-4 text-slate-800 dark:text-slate-100 bg-slate-50/50 dark:bg-slate-900/30 transition-colors">
                     <div class="flex items-center">
                         {{ record.overall_qual }}/10
                         <div class="ml-2 flex">
@@ -53,34 +53,34 @@
                 {% endfor %}
             </tr>
             <tr>
-                <td class="p-4 font-medium text-slate-700">Year Built</td>
+                <td class="p-4 font-medium text-slate-700 dark:text-slate-200 transition-colors">Year Built</td>
                 {% for record in records[:3] %}
-                <td class="p-4 text-slate-800 bg-slate-50/50">{{ record.year_built }}</td>
+                <td class="p-4 text-slate-800 dark:text-slate-100 bg-slate-50/50 dark:bg-slate-900/30 transition-colors">{{ record.year_built }}</td>
                 {% endfor %}
             </tr>
             <tr>
-                <td class="p-4 font-medium text-slate-700">Full Baths</td>
+                <td class="p-4 font-medium text-slate-700 dark:text-slate-200 transition-colors">Full Baths</td>
                 {% for record in records[:3] %}
-                <td class="p-4 text-slate-800 bg-slate-50/50">{{ record.full_bath }}</td>
+                <td class="p-4 text-slate-800 dark:text-slate-100 bg-slate-50/50 dark:bg-slate-900/30 transition-colors">{{ record.full_bath }}</td>
                 {% endfor %}
             </tr>
             <tr>
-                <td class="p-4 font-medium text-slate-700">Garage Capacity</td>
+                <td class="p-4 font-medium text-slate-700 dark:text-slate-200 transition-colors">Garage Capacity</td>
                 {% for record in records[:3] %}
-                <td class="p-4 text-slate-800 bg-slate-50/50">{{ record.garage_cars }} cars</td>
+                <td class="p-4 text-slate-800 dark:text-slate-100 bg-slate-50/50 dark:bg-slate-900/30 transition-colors">{{ record.garage_cars }} cars</td>
                 {% endfor %}
             </tr>
             <tr>
-                <td class="p-4 font-medium text-slate-700">Basement Area</td>
+                <td class="p-4 font-medium text-slate-700 dark:text-slate-200 transition-colors">Basement Area</td>
                 {% for record in records[:3] %}
-                <td class="p-4 text-slate-800 bg-slate-50/50">{{ "{:,}".format(record.total_bsmt_sf) }} sqft</td>
+                <td class="p-4 text-slate-800 dark:text-slate-100 bg-slate-50/50 dark:bg-slate-900/30 transition-colors">{{ "{:,}".format(record.total_bsmt_sf) }} sqft</td>
                 {% endfor %}
             </tr>
             <tr>
-                <td class="p-4 border-t border-slate-200"></td>
+                <td class="p-4 border-t border-slate-200 dark:border-slate-700 transition-colors"></td>
                 {% for record in records[:3] %}
-                <td class="p-4 bg-slate-50 rounded-b-lg border-t border-slate-200">
-                    <a href="{{ url_for('result', record_id=record.id) }}" class="block w-full text-center py-2 bg-white border border-slate-200 rounded text-sm font-medium text-slate-700 hover:text-brand-600 hover:border-brand-300 transition-colors">
+                <td class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-b-lg border-t border-slate-200 dark:border-slate-700 transition-colors">
+                    <a href="{{ url_for('result', record_id=record.id) }}" class="block w-full text-center py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 hover:border-brand-300 dark:hover:border-brand-700 transition-colors">
                         View Details
                     </a>
                 </td>
@@ -90,12 +90,12 @@
     </table>
 </div>
 {% else %}
-<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-12 text-center">
-    <div class="mx-auto w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-        <i class="ph-duotone ph-git-diff text-3xl text-slate-300"></i>
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-12 text-center transition-colors duration-500">
+    <div class="mx-auto w-16 h-16 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4 transition-colors">
+        <i class="ph-duotone ph-git-diff text-3xl text-slate-300 dark:text-slate-600 transition-colors"></i>
     </div>
-    <h3 class="text-lg font-bold text-slate-800 mb-2">Not enough data to compare</h3>
-    <p class="text-slate-500 mb-6 max-w-sm mx-auto">You need at least 2 estimated properties in your history to use the comparison tool.</p>
+    <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2 transition-colors">Not enough data to compare</h3>
+    <p class="text-slate-500 dark:text-slate-400 mb-6 max-w-sm mx-auto transition-colors">You need at least 2 estimated properties in your history to use the comparison tool.</p>
     <a href="{{ url_for('predict') }}" class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors shadow-sm inline-flex items-center">
         New Estimate
     </a>

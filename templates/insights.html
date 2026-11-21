@@ -4,35 +4,35 @@
 
 {% block content %}
 <div class="mb-6">
-    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Market Analytics</h2>
-    <p class="text-slate-500 mt-1">Deep dive into real estate trends based on {{ "{:,}".format(stats.total_analyzed) }} analyzed properties.</p>
+    <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight transition-colors">Market Analytics</h2>
+    <p class="text-slate-500 dark:text-slate-400 mt-1 transition-colors">Deep dive into real estate trends based on {{ "{:,}".format(stats.total_analyzed) }} analyzed properties.</p>
 </div>
 
 <!-- Key Market Indicators -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
-        <h4 class="text-sm font-semibold text-slate-500 mb-4">Average Market Price</h4>
-        <div class="text-3xl font-bold text-slate-800 mb-2">${{ "{:,.0f}".format(stats.avg_price) }}</div>
+    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 transition-colors duration-500">
+        <h4 class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-4 transition-colors">Average Market Price</h4>
+        <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2 transition-colors">${{ "{:,.0f}".format(stats.avg_price) }}</div>
         <div class="flex items-center justify-between text-sm">
-            <span class="text-slate-500">Range: ${{ "{:,.0f}".format(stats.min_price) }} - ${{ "{:,.0f}".format(stats.max_price) }}</span>
+            <span class="text-slate-500 dark:text-slate-400 transition-colors">Range: ${{ "{:,.0f}".format(stats.min_price) }} - ${{ "{:,.0f}".format(stats.max_price) }}</span>
         </div>
     </div>
 
-    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
-        <h4 class="text-sm font-semibold text-slate-500 mb-4">Price Per SqFt Trends</h4>
-        <div class="text-3xl font-bold text-slate-800 mb-2">${{ "{:,.0f}".format(stats.avg_price_per_sqft) }}</div>
+    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 transition-colors duration-500">
+        <h4 class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-4 transition-colors">Price Per SqFt Trends</h4>
+        <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2 transition-colors">${{ "{:,.0f}".format(stats.avg_price_per_sqft) }}</div>
         <div class="flex items-center text-sm">
-            <span class="text-green-500 flex items-center font-medium"><i class="ph-bold ph-trend-up mr-1"></i> 3.2%</span>
-            <span class="text-slate-400 ml-2">vs last quarter</span>
+            <span class="text-green-500 dark:text-green-400 flex items-center font-medium transition-colors"><i class="ph-bold ph-trend-up mr-1"></i> 3.2%</span>
+            <span class="text-slate-400 dark:text-slate-500 ml-2 transition-colors">vs last quarter</span>
         </div>
     </div>
 
-    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
-        <h4 class="text-sm font-semibold text-slate-500 mb-4">Avg Property Size</h4>
-        <div class="text-3xl font-bold text-slate-800 mb-2">{{ "{:,.0f}".format(stats.avg_sqft) }} <span class="text-lg text-slate-500 font-normal">sqft</span></div>
+    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 transition-colors duration-500">
+        <h4 class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-4 transition-colors">Avg Property Size</h4>
+        <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2 transition-colors">{{ "{:,.0f}".format(stats.avg_sqft) }} <span class="text-lg text-slate-500 dark:text-slate-400 font-normal">sqft</span></div>
         <div class="flex items-center text-sm">
-            <span class="text-blue-500 flex items-center font-medium"><i class="ph-bold ph-arrows-out mr-1"></i> Stable</span>
-            <span class="text-slate-400 ml-2">Consistent demand</span>
+            <span class="text-blue-500 dark:text-blue-400 flex items-center font-medium transition-colors"><i class="ph-bold ph-arrows-out mr-1"></i> Stable</span>
+            <span class="text-slate-400 dark:text-slate-500 ml-2 transition-colors">Consistent demand</span>
         </div>
     </div>
 </div>
@@ -41,16 +41,16 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
     <!-- Chart 1: Price by Quality -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-        <h3 class="text-lg font-bold text-slate-800 mb-6">Price vs Quality Rating</h3>
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 transition-colors duration-500">
+        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 transition-colors">Price vs Quality Rating</h3>
         <div class="h-64 w-full relative">
             <canvas id="qualityChart"></canvas>
         </div>
     </div>
 
     <!-- Chart 2: Price by Age -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-        <h3 class="text-lg font-bold text-slate-800 mb-6">Average Price by Decade Built</h3>
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 transition-colors duration-500">
+        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 transition-colors">Average Price by Decade Built</h3>
         <div class="h-64 w-full relative">
             <canvas id="ageChart"></canvas>
         </div>
@@ -58,11 +58,11 @@
 </div>
 
 <!-- Notice -->
-<div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start">
-    <i class="ph-fill ph-info text-blue-500 text-xl mr-3 mt-0.5"></i>
+<div class="mt-8 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/50 rounded-lg p-4 flex items-start transition-colors duration-500">
+    <i class="ph-fill ph-info text-blue-500 dark:text-blue-400 text-xl mr-3 mt-0.5 transition-colors"></i>
     <div>
-        <h4 class="font-medium text-blue-800">Data Source Information</h4>
-        <p class="text-sm text-blue-600 mt-1">This market data is generated from a comprehensive dataset of real estate transactions. While accurate for its specific market, it should be used for analytical purposes alongside professional appraisals.</p>
+        <h4 class="font-medium text-blue-800 dark:text-blue-300 transition-colors">Data Source Information</h4>
+        <p class="text-sm text-blue-600 dark:text-blue-400/80 mt-1 transition-colors">This market data is generated from a comprehensive dataset of real estate transactions. While accurate for its specific market, it should be used for analytical purposes alongside professional appraisals.</p>
     </div>
 </div>
 {% endblock %}
