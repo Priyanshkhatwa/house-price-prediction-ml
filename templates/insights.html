@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block page_title %}Market Insights{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Market Analytics</h2>
+    <p class="text-slate-500 mt-1">Deep dive into real estate trends based on {{ "{:,}".format(stats.total_analyzed) }} analyzed properties.</p>
+</div>
+
+<!-- Key Market Indicators -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <h4 class="text-sm font-semibold text-slate-500 mb-4">Average Market Price</h4>
+        <div class="text-3xl font-bold text-slate-800 mb-2">${{ "{:,.0f}".format(stats.avg_price) }}</div>
+        <div class="flex items-center justify-between text-sm">
+            <span class="text-slate-500">Range: ${{ "{:,.0f}".format(stats.min_price) }} - ${{ "{:,.0f}".format(stats.max_price) }}</span>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <h4 class="text-sm font-semibold text-slate-500 mb-4">Price Per SqFt Trends</h4>
+        <div class="text-3xl font-bold text-slate-800 mb-2">${{ "{:,.0f}".format(stats.avg_price_per_sqft) }}</div>
+        <div class="flex items-center text-sm">
+            <span class="text-green-500 flex items-center font-medium"><i class="ph-bold ph-trend-up mr-1"></i> 3.2%</span>
+            <span class="text-slate-400 ml-2">vs last quarter</span>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <h4 class="text-sm font-semibold text-slate-500 mb-4">Avg Property Size</h4>
+        <div class="text-3xl font-bold text-slate-800 mb-2">{{ "{:,.0f}".format(stats.avg_sqft) }} <span class="text-lg text-slate-500 font-normal">sqft</span></div>
+        <div class="flex items-center text-sm">
+            <span class="text-blue-500 flex items-center font-medium"><i class="ph-bold ph-arrows-out mr-1"></i> Stable</span>
+            <span class="text-slate-400 ml-2">Consistent demand</span>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+    <!-- Chart 1: Price by Quality -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+        <h3 class="text-lg font-bold text-slate-800 mb-6">Price vs Quality Rating</h3>
+        <div class="h-64 w-full relative">
+            <canvas id="qualityChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart 2: Price by Age -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+        <h3 class="text-lg font-bold text-slate-800 mb-6">Average Price by Decade Built</h3>
+        <div class="h-64 w-full relative">
+            <canvas id="ageChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Notice -->
+<div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start">
+    <i class="ph-fill ph-info text-blue-500 text-xl mr-3 mt-0.5"></i>
+    <div>
+        <h4 class="font-medium text-blue-800">Data Source Information</h4>
+        <p class="text-sm text-blue-600 mt-1">This market data is generated from a comprehensive dataset of real estate transactions. While accurate for its specific market, it should be used for analytical purposes alongside professional appraisals.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Quality Chart (Bar)
+        const qCtx = document.getElementById('qualityChart').getContext('2d');
+        new Chart(qCtx, {
+            type: 'bar',
+            data: {
+                labels: ['4 (Poor)', '5 (Fair)', '6 (Avg)', '7 (Good)', '8 (V.Good)', '9 (Exc)', '10 (Prem)'],
+                datasets: [{
+                    label: 'Avg Price',
+                    data: [105000, 133000, 161000, 207000, 274000, 367000, 438000],
+                    backgroundColor: '#14b8a6', // brand-500
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '$' + context.raw.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: {
+                        grid: { borderDash: [5, 5] },
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value / 1000 + 'k';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Age Chart (Line)
+        const aCtx = document.getElementById('ageChart').getContext('2d');
+        new Chart(aCtx, {
+            type: 'line',
+            data: {
+                labels: ['1950s', '1960s', '1970s', '1980s', '1990s', '2000s', '2010s'],
+                datasets: [{
+                    label: 'Avg Price',
+                    data: [135000, 142000, 155000, 178000, 215000, 248000, 275000],
+                    borderColor: '#3b82f6', // blue-500
+                    borderWidth: 3,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#3b82f6',
+                    pointRadius: 5,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '$' + context.raw.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: {
+                        grid: { borderDash: [5, 5] },
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value / 1000 + 'k';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

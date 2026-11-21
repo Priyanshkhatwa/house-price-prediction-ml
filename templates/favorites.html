@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block page_title %}Saved Properties{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-end">
+    <div>
+        <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Saved Properties</h2>
+        <p class="text-slate-500 mt-1">Your shortlisted property valuations.</p>
+    </div>
+</div>
+
+{% if records %}
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    {% for record in records %}
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow group flex flex-col h-full">
+        <!-- Card Header -->
+        <div class="bg-slate-900 p-5 text-white relative">
+            <div class="absolute right-4 top-4">
+                <form action="{{ url_for('remove_favorite', record_id=record.id) }}" method="POST">
+                    <button type="submit" class="text-red-400 hover:text-red-300 transition-colors" title="Remove from favorites">
+                        <i class="ph-fill ph-heart text-xl"></i>
+                    </button>
+                </form>
+            </div>
+
+            <p class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">Estimated Value</p>
+            <h3 class="text-3xl font-bold">${{ "{:,.0f}".format(record.predicted_price) }}</h3>
+
+            <div class="mt-4 flex items-center text-xs font-medium">
+                <i class="ph-bold ph-calendar mr-1.5 text-slate-400"></i>
+                <span class="text-slate-300">Saved on {{ record.timestamp.split()[0] }}</span>
+            </div>
+        </div>
+
+        <!-- Card Body -->
+        <div class="p-5 flex-1 flex flex-col">
+            <div class="grid grid-cols-2 gap-y-4 gap-x-2 mb-6">
+                <div>
+                    <p class="text-slate-400 text-xs">Living Area</p>
+                    <p class="font-bold text-slate-800">{{ "{:,}".format(record.gr_liv_area) }} <span class="text-xs font-normal text-slate-500">sqft</span></p>
+                </div>
+                <div>
+                    <p class="text-slate-400 text-xs">Quality Score</p>
+                    <p class="font-bold text-slate-800">{{ record.overall_qual }} <span class="text-xs font-normal text-slate-500">/ 10</span></p>
+                </div>
+                <div>
+                    <p class="text-slate-400 text-xs">Year Built</p>
+                    <p class="font-bold text-slate-800">{{ record.year_built }}</p>
+                </div>
+                <div>
+                    <p class="text-slate-400 text-xs">Bathrooms</p>
+                    <p class="font-bold text-slate-800">{{ record.full_bath }}</p>
+                </div>
+                <div>
+                    <p class="text-slate-400 text-xs">Garage</p>
+                    <p class="font-bold text-slate-800">{{ record.garage_cars }} <span class="text-xs font-normal text-slate-500">cars</span></p>
+                </div>
+                <div>
+                    <p class="text-slate-400 text-xs">Price / SqFt</p>
+                    <p class="font-bold text-slate-800">${{ "{:,.0f}".format(record.predicted_price / record.gr_liv_area) }}</p>
+                </div>
+            </div>
+
+            <div class="mt-auto pt-4 border-t border-slate-100">
+                <button class="w-full text-center text-sm font-medium text-brand-600 hover:text-brand-700 bg-brand-50 hover:bg-brand-100 py-2 rounded-lg transition-colors">
+                    View Full Report
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-12 text-center">
+    <div class="mx-auto w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+        <i class="ph-duotone ph-heart-break text-3xl text-slate-300"></i>
+    </div>
+    <h3 class="text-lg font-bold text-slate-800 mb-2">No saved properties yet</h3>
+    <p class="text-slate-500 mb-6 max-w-sm mx-auto">Valuations you save will appear here for easy access and comparison.</p>
+    <a href="{{ url_for('predict') }}" class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors shadow-sm inline-flex items-center">
+        New Estimate
+    </a>
+</div>
+{% endif %}
+{% endblock %}

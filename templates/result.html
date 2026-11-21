@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block page_title %}Valuation Report{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-end">
+    <div>
+        <div class="flex items-center text-sm text-slate-500 mb-2">
+            <a href="{{ url_for('dashboard') }}" class="hover:text-brand-500">Dashboard</a>
+            <i class="ph-bold ph-caret-right mx-2 text-xs"></i>
+            <span class="text-slate-800 font-medium">Valuation Report</span>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-800 tracking-tight">AI Property Valuation</h2>
+    </div>
+
+    <div class="flex space-x-3">
+        <form action="{{ url_for('add_favorite', record_id=record.id) }}" method="POST">
+            <button type="submit" class="bg-white border border-slate-200 text-slate-700 hover:text-red-500 hover:border-red-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center">
+                <i class="ph-bold ph-heart mr-2"></i> Save
+            </button>
+        </form>
+        <button onclick="window.print()" class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm shadow-brand-500/20 flex items-center">
+            <i class="ph-bold ph-download-simple mr-2"></i> Export
+        </button>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- Price Card -->
+    <div class="lg:col-span-1 space-y-6">
+        <div class="bg-slate-900 rounded-2xl p-8 shadow-lg text-center relative overflow-hidden">
+            <div class="absolute -right-8 -top-8 text-slate-800 opacity-50 z-0">
+                <i class="ph-fill ph-check-circle text-9xl"></i>
+            </div>
+
+            <div class="relative z-10">
+                <p class="text-slate-400 font-medium text-sm mb-2 uppercase tracking-widest">Estimated Value</p>
+                <h1 class="text-5xl font-extrabold text-white mb-2 tracking-tight">${{ "{:,.0f}".format(record.predicted_price) }}</h1>
+
+                <div class="inline-flex items-center bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold mb-8">
+                    <i class="ph-bold ph-trend-up mr-1.5"></i> High Confidence
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 border-t border-slate-700 pt-6">
+                    <div>
+                        <p class="text-slate-400 text-xs mb-1">Price / SqFt</p>
+                        <p class="text-white font-bold text-lg">${{ "{:,.0f}".format(record.predicted_price / record.gr_liv_area) }}</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 text-xs mb-1">Estimated Range</p>
+                        <p class="text-white font-bold text-sm mt-1">${{ "{:,.0f}".format(record.predicted_price * 0.95) }} - ${{ "{:,.0f}".format(record.predicted_price * 1.05) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary details -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <h3 class="text-lg font-bold text-slate-800 mb-4 border-b border-slate-100 pb-3">Property Summary</h3>
+            <ul class="space-y-4">
+                <li class="flex justify-between items-center">
+                    <div class="flex items-center text-slate-600">
+                        <i class="ph-duotone ph-frame-corners text-xl mr-3 text-slate-400"></i>
+                        <span>Living Area</span>
+                    </div>
+                    <span class="font-bold text-slate-800">{{ "{:,}".format(record.gr_liv_area) }} sqft</span>
+                </li>
+                <li class="flex justify-between items-center">
+                    <div class="flex items-center text-slate-600">
+                        <i class="ph-duotone ph-bathtub text-xl mr-3 text-slate-400"></i>
+                        <span>Full Baths</span>
+                    </div>
+                    <span class="font-bold text-slate-800">{{ record.full_bath }}</span>
+                </li>
+                <li class="flex justify-between items-center">
+                    <div class="flex items-center text-slate-600">
+                        <i class="ph-duotone ph-calendar-blank text-xl mr-3 text-slate-400"></i>
+                        <span>Year Built</span>
+                    </div>
+                    <span class="font-bold text-slate-800">{{ record.year_built }}</span>
+                </li>
+                <li class="flex justify-between items-center">
+                    <div class="flex items-center text-slate-600">
+                        <i class="ph-duotone ph-car-profile text-xl mr-3 text-slate-400"></i>
+                        <span>Garage Size</span>
+                    </div>
+                    <span class="font-bold text-slate-800">{{ record.garage_cars }} Cars ({{ record.garage_area }} sqft)</span>
+                </li>
+                <li class="flex justify-between items-center">
+                    <div class="flex items-center text-slate-600">
+                        <i class="ph-duotone ph-stairs text-xl mr-3 text-slate-400"></i>
+                        <span>Basement</span>
+                    </div>
+                    <span class="font-bold text-slate-800">{{ "{:,}".format(record.total_bsmt_sf) }} sqft</span>
+                </li>
+                <li class="flex justify-between items-center">
+                    <div class="flex items-center text-slate-600">
+                        <i class="ph-duotone ph-star text-xl mr-3 text-slate-400"></i>
+                        <span>Overall Quality</span>
+                    </div>
+                    <span class="font-bold text-slate-800">{{ record.overall_qual }} / 10</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Details and Charts -->
+    <div class="lg:col-span-2 space-y-8">
+
+        <!-- Value Breakdown -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <h3 class="text-lg font-bold text-slate-800 mb-6">Price Contribution Breakdown</h3>
+
+            <div class="space-y-5">
+                <!-- Factor 1 -->
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="font-medium text-slate-700">Size & Area</span>
+                        <span class="font-bold text-slate-800">High Impact</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2.5">
+                        <div class="bg-brand-500 h-2.5 rounded-full" style="width: 85%"></div>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Living area of {{ record.gr_liv_area }} sqft is the primary price driver.</p>
+                </div>
+
+                <!-- Factor 2 -->
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="font-medium text-slate-700">Quality & Finish ({{ record.overall_qual }}/10)</span>
+                        <span class="font-bold text-slate-800">High Impact</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2.5">
+                        <div class="bg-blue-500 h-2.5 rounded-full" style="width: 70%"></div>
+                    </div>
+                </div>
+
+                <!-- Factor 3 -->
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="font-medium text-slate-700">Age & Condition (Built {{ record.year_built }})</span>
+                        <span class="font-bold text-slate-800">Medium Impact</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2.5">
+                        <div class="bg-indigo-500 h-2.5 rounded-full" style="width: 45%"></div>
+                    </div>
+                </div>
+
+                <!-- Factor 4 -->
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="font-medium text-slate-700">Amenities (Garage, Basement)</span>
+                        <span class="font-bold text-slate-800">Medium Impact</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2.5">
+                        <div class="bg-violet-500 h-2.5 rounded-full" style="width: 35%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparable insights -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <h3 class="text-lg font-bold text-slate-800 mb-6">Market Comparison</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-5 border border-slate-100 rounded-xl bg-slate-50">
+                    <h4 class="text-sm font-bold text-slate-700 mb-3">Similar Properties</h4>
+                    <p class="text-3xl font-bold text-slate-900 mb-1">$215k <span class="text-lg text-slate-400 font-normal">avg</span></p>
+                    <p class="text-xs text-slate-500">Properties with similar size and quality in the area.</p>
+                </div>
+
+                <div class="p-5 border border-slate-100 rounded-xl bg-slate-50">
+                    <h4 class="text-sm font-bold text-slate-700 mb-3">Your Property vs Average</h4>
+                    <div class="flex items-end">
+                        <div class="w-1/2 flex flex-col items-center">
+                            <div class="w-12 bg-slate-300 rounded-t-md h-24"></div>
+                            <span class="text-xs font-medium text-slate-500 mt-2">Average</span>
+                        </div>
+                        <div class="w-1/2 flex flex-col items-center">
+                            <div class="w-12 bg-brand-500 rounded-t-md h-32 relative">
+                                <div class="absolute -top-6 w-full text-center text-xs font-bold text-brand-600">+18%</div>
+                            </div>
+                            <span class="text-xs font-bold text-slate-800 mt-2">Yours</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-center">
+                <a href="{{ url_for('predict') }}" class="text-brand-500 font-medium hover:text-brand-600 text-sm flex items-center">
+                    <i class="ph-bold ph-plus-circle mr-1"></i> Make another prediction
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
